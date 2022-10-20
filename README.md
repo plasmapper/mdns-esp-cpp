@@ -1,3 +1,3 @@
 # mDNS C++ Class Component for ESP-IDF
 
-[Documentation](https://plasmapper.github.io/esp-cpp/mdns)
+[Documentation](https://plasmapper.github.io/esp-cpp/components/mdns/docs)
