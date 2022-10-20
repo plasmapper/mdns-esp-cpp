@@ -15,9 +15,9 @@ public:
   /// @brief Default server name
   static const std::string defaultName;
   /// @brief Default port
-  const uint16_t defaultPort = 5353;
+  static const uint16_t defaultPort = 5353;
   /// @brief Default maximum number of server clients
-  const int defaultMaxNumberOfClients = 1;
+  static const int defaultMaxNumberOfClients = 1;
   
   /// @brief Create an mDNS server
   /// @param hostname hostname
