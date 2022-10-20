@@ -10,8 +10,7 @@ mDNS Component
 Features
 --------
 
-1. :cpp:class:`PL::MdnsClient` - an mDNS client class. It is initialized with an IP address and a port, that can be changed later.
-   Static function :cpp:func:`PL::MdnsClient::DnsSdQuery` discover services using a DNS-SD query.
+1. :cpp:class:`PL::MdnsClient` - an mDNS client class. Static function :cpp:func:`PL::MdnsClient::DnsSdQuery` discover services using a DNS-SD query.
 2. :cpp:class:`PL::MdnsServer` - an mDNS server class. :cpp:func:`PL::MdnsServer::AddService` adds a :cpp:class:`PL::NetworkServer` to the mDNS server as a service. 
 
 Examples
