@@ -38,7 +38,7 @@ extern "C" void app_main(void) {
     if (info.additionalInfo.size()) {
       printf ("Additional information:\n");
       for (auto& additionalInfoItem : info.additionalInfo)
-        printf ("  %s: %s\n", additionalInfoItem.name.c_str(), additionalInfoItem.value.c_str());
+        printf ("  %s: %s\n", additionalInfoItem.first.c_str(), additionalInfoItem.second.c_str());
     }
     
     printf ("\n");

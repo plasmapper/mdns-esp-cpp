@@ -41,7 +41,7 @@ public:
   /// @param additionalInfo additional information
   /// @return 
   esp_err_t AddService (std::shared_ptr<NetworkServer> server, const std::string& type, const std::string& protocol,
-                        const std::vector<MdnsServiceInstanceAdditionalInfoItem>& additionalInfo = {});
+                        const std::map<std::string, std::string>& additionalInfo = {});
 
   // Remove the network server service from the mDNS server
   esp_err_t RemoveService (std::shared_ptr<NetworkServer> server);
@@ -73,7 +73,7 @@ private:
     std::weak_ptr<NetworkServer> server;
     std::string type;
     std::string protocol;
-    std::vector<MdnsServiceInstanceAdditionalInfoItem> additionalInfo;
+    std::map<std::string, std::string> additionalInfo;
   };
   std::vector<Service> services;  
 };

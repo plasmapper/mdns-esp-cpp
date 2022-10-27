@@ -1,19 +1,10 @@
 #pragma once
 #include "pl_network.h"
+#include <map>
 
 //==============================================================================
 
 namespace PL {
-
-//==============================================================================
-
-/// @brief DNS service instance additional information item
-struct MdnsServiceInstanceAdditionalInfoItem {
-  /// @brief Name
-  std::string name;
-  /// @brief Value
-  std::string value;
-};
 
 //==============================================================================
 
@@ -26,7 +17,7 @@ struct MdnsServiceInstanceInfo {
   /// @brief Network endpoint
   NetworkEndpoint networkEndpoint;
   /// @brief Additional information
-  std::vector<MdnsServiceInstanceAdditionalInfoItem> additionalInfo;
+  std::map<std::string, std::string> additionalInfo;
 };
 
 //==============================================================================

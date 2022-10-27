@@ -60,8 +60,8 @@ esp_err_t MdnsServer::Enable() {
           txtItems = std::unique_ptr<mdns_txt_item_t[]> (new mdns_txt_item_t[numberOfTxtItems]);
           size_t index = 0;
           for (auto& additionalInfoItem : service.additionalInfo) {
-            txtItems[index].key = additionalInfoItem.name.c_str();
-            txtItems[index++].value = additionalInfoItem.value.c_str();
+            txtItems[index].key = additionalInfoItem.first.c_str();
+            txtItems[index++].value = additionalInfoItem.second.c_str();
           }            
         }          
 
@@ -89,7 +89,7 @@ esp_err_t MdnsServer::Disable() {
 //==============================================================================
 
 esp_err_t MdnsServer::AddService (std::shared_ptr<NetworkServer> server, const std::string& type, const std::string& protocol,
-                                  const std::vector<MdnsServiceInstanceAdditionalInfoItem>& additionalInfo) {
+                                  const std::map<std::string, std::string>& additionalInfo) {
   LockGuard lg (mutex);
   services.push_back ({server, type, protocol, additionalInfo});
   server->enabledEvent.AddHandler (serverEventHandler);

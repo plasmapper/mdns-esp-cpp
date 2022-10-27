@@ -30,7 +30,7 @@ esp_err_t MdnsClient::DnsSdQuery (const std::string& type, const std::string& pr
         }
 
         for (size_t i = 0; i < r->txt_count; i++)
-          info.additionalInfo.push_back ({r->txt[i].key, r->txt[i].value});
+          info.additionalInfo[r->txt[i].key] = r->txt[i].value;
 
         serviceInstancesInfo.push_back (info);        
       }
