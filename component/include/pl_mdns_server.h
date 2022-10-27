@@ -75,7 +75,9 @@ private:
     std::string protocol;
     std::map<std::string, std::string> additionalInfo;
   };
-  std::vector<Service> services;  
+  std::vector<Service> services;
+
+  esp_err_t RestartIfEnabled();  
 };
 
 //==============================================================================
