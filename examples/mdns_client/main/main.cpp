@@ -7,9 +7,9 @@ PL::EspWiFiStation wifi;
 const std::string wifiSsid = CONFIG_EXAMPLE_WIFI_SSID;
 const std::string wifiPassword = CONFIG_EXAMPLE_WIFI_PASSWORD;
 
+PL::MdnsClient mdnsClient;
 const std::string serviceType = "_http";
 const std::string serviceProtocol = "_tcp";
-const TickType_t timeout = 1000 / portTICK_RATE_MS;
 
 //==============================================================================
 
@@ -26,7 +26,7 @@ extern "C" void app_main(void) {
     vTaskDelay (1);
   
   std::vector<PL::MdnsServiceInstanceInfo> serviceInstancesInfo;
-  ESP_ERROR_CHECK_WITHOUT_ABORT (PL::MdnsClient::DnsSdQuery (serviceType, serviceProtocol, 10, "", timeout, serviceInstancesInfo));
+  ESP_ERROR_CHECK_WITHOUT_ABORT (mdnsClient.DnsSdQuery (serviceType, serviceProtocol, 10, "", serviceInstancesInfo));
 
   printf ("Discovered %d %s.%s.local services.\n\n", serviceInstancesInfo.size(), serviceType.c_str(), serviceProtocol.c_str());
 

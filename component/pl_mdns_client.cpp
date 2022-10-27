@@ -7,13 +7,13 @@ namespace PL {
 
 //==============================================================================
 
-esp_err_t MdnsClient::DnsSdQuery (const std::string& type, const std::string& protocol, size_t maxNumberOfInstances, const std::string& instanceName, TickType_t timeout,
+esp_err_t MdnsClient::DnsSdQuery (const std::string& type, const std::string& protocol, size_t maxNumberOfInstances, const std::string& instanceName,
                                   std::vector<MdnsServiceInstanceInfo>& serviceInstancesInfo) {
   mdns_result_t* results = NULL;
   serviceInstancesInfo.clear();
 
   PL_RETURN_ON_ERROR (mdns_init());
-  PL_RETURN_ON_ERROR (mdns_query (NULL, type.c_str(), protocol.c_str(), MDNS_TYPE_PTR, timeout * portTICK_RATE_MS, maxNumberOfInstances, &results));
+  PL_RETURN_ON_ERROR (mdns_query (NULL, type.c_str(), protocol.c_str(), MDNS_TYPE_PTR, readTimeout * portTICK_RATE_MS, maxNumberOfInstances, &results));
   if (results) {
     for (mdns_result_t* r = results; r; r = r->next) {
       MdnsServiceInstanceInfo info;
@@ -39,6 +39,21 @@ esp_err_t MdnsClient::DnsSdQuery (const std::string& type, const std::string& pr
   }
 
   return ESP_OK;  
+}
+
+//==============================================================================
+
+TickType_t TcpClient::GetReadTimeout() {
+  LockGuard lg (*this);
+  return readTimeout;
+}
+
+//==============================================================================
+
+esp_err_t TcpClient::SetReadTimeout (TickType_t timeout) {
+  LockGuard lg (*this);
+  this->readTimeout = timeout;
+  return ESP_OK;
 }
 
 //==============================================================================
