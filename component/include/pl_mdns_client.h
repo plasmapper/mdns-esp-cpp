@@ -10,13 +10,16 @@ namespace PL {
 //==============================================================================
 
 /// @brief mDNS client class
-class MdnsClient {
+class MdnsClient : public Lockable{
 public:
   /// @brief Default read operation timeout in FreeRTOS ticks
   static const TickType_t defaultReadTimeout = 300 / portTICK_PERIOD_MS;
 
   /// @brief Create an mDNS client
   MdnsClient() {}
+
+  esp_err_t Lock (TickType_t timeout = portMAX_DELAY) override;
+  esp_err_t Unlock() override;
 
   /// @brief Discover services using a DNS-SD query
   /// @param type service type (_http, _ftp, etc)

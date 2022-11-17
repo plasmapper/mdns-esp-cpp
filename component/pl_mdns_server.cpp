@@ -1,5 +1,10 @@
 #include "pl_mdns_server.h"
 #include "mdns.h"
+#include "esp_check.h"
+
+//==============================================================================
+
+static const char* TAG = "pl_mdns server";
 
 //==============================================================================
 
@@ -29,13 +34,20 @@ MdnsServer::~MdnsServer() {
 //==============================================================================
 
 esp_err_t MdnsServer::Lock (TickType_t timeout) {
-  return mutex.Lock (timeout);
+  esp_err_t error = mutex.Lock (timeout);
+  if (error == ESP_OK)
+    return ESP_OK;
+  if (error == ESP_ERR_TIMEOUT && timeout == 0)
+    return ESP_ERR_TIMEOUT;
+  ESP_RETURN_ON_ERROR (error, TAG, "mutex lock failed");
+  return ESP_OK;
 }
 
 //==============================================================================
 
 esp_err_t MdnsServer::Unlock() {
-  return mutex.Unlock();
+  ESP_RETURN_ON_ERROR (mutex.Unlock(), TAG, "mutex unlock failed");
+  return ESP_OK;
 }
 
 //==============================================================================
@@ -45,8 +57,8 @@ esp_err_t MdnsServer::Enable() {
   if (enabled)
     return ESP_OK;
 
-  PL_RETURN_ON_ERROR (mdns_init());
-  PL_RETURN_ON_ERROR (mdns_hostname_set (hostname.c_str()));
+  ESP_RETURN_ON_ERROR (mdns_init(), TAG, "init failed");
+  ESP_RETURN_ON_ERROR (mdns_hostname_set (hostname.c_str()), TAG, "hostname set failed");
 
   enabled = true;
   enabledEvent.Generate();
@@ -65,7 +77,8 @@ esp_err_t MdnsServer::Enable() {
           }            
         }          
 
-        PL_RETURN_ON_ERROR (mdns_service_add (serverLocked->GetName().c_str(), service.type.c_str(), service.protocol.c_str(), serverLocked->GetPort(), txtItems.get(), numberOfTxtItems));
+        ESP_RETURN_ON_ERROR (mdns_service_add (serverLocked->GetName().c_str(), service.type.c_str(), service.protocol.c_str(), serverLocked->GetPort(), txtItems.get(), numberOfTxtItems), \
+                             TAG, "service add failed");
       }
     }
   }
@@ -171,8 +184,9 @@ esp_err_t MdnsServer::SetHostname (const std::string& hostname) {
 esp_err_t MdnsServer::RestartIfEnabled() {
   if (!enabled)
     return ESP_OK;
-  PL_RETURN_ON_ERROR (Disable());
-  return Enable();
+  ESP_RETURN_ON_ERROR (Disable(), TAG, "disable failed");
+  ESP_RETURN_ON_ERROR (Enable(), TAG, "enable failed");
+  return ESP_OK;
 }
 
 //==============================================================================

@@ -1,5 +1,10 @@
 #include "pl_mdns_client.h"
 #include "mdns.h"
+#include "esp_check.h"
+
+//==============================================================================
+
+static const char* TAG = "pl_mdns_client";
 
 //==============================================================================
 
@@ -7,13 +12,33 @@ namespace PL {
 
 //==============================================================================
 
+esp_err_t MdnsClient::Lock (TickType_t timeout) {
+  esp_err_t error = mutex.Lock (timeout);
+  if (error == ESP_OK)
+    return ESP_OK;
+  if (error == ESP_ERR_TIMEOUT && timeout == 0)
+    return ESP_ERR_TIMEOUT;
+  ESP_RETURN_ON_ERROR (error, TAG, "mutex lock failed");
+  return ESP_OK;
+}
+
+//==============================================================================
+
+esp_err_t MdnsClient::Unlock() {
+  ESP_RETURN_ON_ERROR (mutex.Unlock(), TAG, "mutex unlock failed");
+  return ESP_OK;
+}
+
+//==============================================================================
+
 esp_err_t MdnsClient::DnsSdQuery (const std::string& type, const std::string& protocol, size_t maxNumberOfInstances, const std::string& instanceName,
                                   std::vector<MdnsServiceInstanceInfo>& serviceInstancesInfo) {
+  LockGuard lg (*this);
   mdns_result_t* results = NULL;
   serviceInstancesInfo.clear();
 
-  PL_RETURN_ON_ERROR (mdns_init());
-  PL_RETURN_ON_ERROR (mdns_query (NULL, type.c_str(), protocol.c_str(), MDNS_TYPE_PTR, readTimeout * portTICK_RATE_MS, maxNumberOfInstances, &results));
+  ESP_RETURN_ON_ERROR (mdns_init(), TAG, "init failed");
+  ESP_RETURN_ON_ERROR (mdns_query (NULL, type.c_str(), protocol.c_str(), MDNS_TYPE_PTR, readTimeout * portTICK_RATE_MS, maxNumberOfInstances, &results), TAG, "query failed");
   if (results) {
     for (mdns_result_t* r = results; r; r = r->next) {
       MdnsServiceInstanceInfo info;
@@ -43,14 +68,14 @@ esp_err_t MdnsClient::DnsSdQuery (const std::string& type, const std::string& pr
 
 //==============================================================================
 
-TickType_t TcpClient::GetReadTimeout() {
+TickType_t MdnsClient::GetReadTimeout() {
   LockGuard lg (*this);
   return readTimeout;
 }
 
 //==============================================================================
 
-esp_err_t TcpClient::SetReadTimeout (TickType_t timeout) {
+esp_err_t MdnsClient::SetReadTimeout (TickType_t timeout) {
   LockGuard lg (*this);
   this->readTimeout = timeout;
   return ESP_OK;
