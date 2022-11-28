@@ -36,11 +36,12 @@ public:
 
   /// @brief Add a network server to the mDNS server as a service
   /// @param server server
+  /// @param name service name
   /// @param type service type (_http, _ftp, etc)
   /// @param protocol service protocol (_tcp, _udp)
   /// @param additionalInfo additional information
   /// @return 
-  esp_err_t AddService (std::shared_ptr<NetworkServer> server, const std::string& type, const std::string& protocol,
+  esp_err_t AddService (std::shared_ptr<NetworkServer> server, const std::string& name, const std::string& type, const std::string& protocol,
                         const std::map<std::string, std::string>& additionalInfo = {});
 
   // Remove the network server service from the mDNS server
@@ -71,6 +72,7 @@ private:
 
   struct Service {
     std::weak_ptr<NetworkServer> server;
+    std::string name;
     std::string type;
     std::string protocol;
     std::map<std::string, std::string> additionalInfo;

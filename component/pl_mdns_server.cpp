@@ -77,7 +77,7 @@ esp_err_t MdnsServer::Enable() {
           }            
         }          
 
-        ESP_RETURN_ON_ERROR (mdns_service_add (serverLocked->GetName().c_str(), service.type.c_str(), service.protocol.c_str(), serverLocked->GetPort(), txtItems.get(), numberOfTxtItems), \
+        ESP_RETURN_ON_ERROR (mdns_service_add (service.name.c_str(), service.type.c_str(), service.protocol.c_str(), serverLocked->GetPort(), txtItems.get(), numberOfTxtItems), \
                              TAG, "service add failed");
       }
     }
@@ -108,10 +108,10 @@ void MdnsServer::HandleEvent (Server& server) {
 
 //==============================================================================
 
-esp_err_t MdnsServer::AddService (std::shared_ptr<NetworkServer> server, const std::string& type, const std::string& protocol,
+esp_err_t MdnsServer::AddService (std::shared_ptr<NetworkServer> server, const std::string& name, const std::string& type, const std::string& protocol,
                                   const std::map<std::string, std::string>& additionalInfo) {
   LockGuard lg (mutex);
-  services.push_back ({server, type, protocol, additionalInfo});
+  services.push_back ({server, name, type, protocol, additionalInfo});
   server->enabledEvent.AddHandler (serverEventHandler);
   server->disabledEvent.AddHandler (serverEventHandler);
   return RestartIfEnabled();

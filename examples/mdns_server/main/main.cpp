@@ -34,7 +34,7 @@ extern "C" void app_main(void) {
   wifi.SetSsid (wifiSsid);
   wifi.SetPassword (wifiPassword);
 
-  mdnsServer.AddService (echoServer, "_echo", "_tcp", { {"Test name", "Test value"} });
+  mdnsServer.AddService (echoServer, EchoServer::defaultName, "_echo", "_tcp", { {"Test name", "Test value"} });
 
   wifi.Enable();
   echoServer->Enable();
