@@ -36,6 +36,7 @@ extern "C" void app_main(void) {
 
   mdnsServer.AddService (echoServer, EchoServer::defaultName, "_echo", "_tcp", { {"Test name", "Test value"} });
 
+  wifi.EnableIpV4DhcpClient();
   wifi.Enable();
   echoServer->Enable();
   mdnsServer.Enable();

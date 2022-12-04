@@ -38,7 +38,7 @@ esp_err_t MdnsClient::DnsSdQuery (const std::string& type, const std::string& pr
   serviceInstancesInfo.clear();
 
   ESP_RETURN_ON_ERROR (mdns_init(), TAG, "init failed");
-  ESP_RETURN_ON_ERROR (mdns_query (NULL, type.c_str(), protocol.c_str(), MDNS_TYPE_PTR, readTimeout * portTICK_RATE_MS, maxNumberOfInstances, &results), TAG, "query failed");
+  ESP_RETURN_ON_ERROR (mdns_query (NULL, type.c_str(), protocol.c_str(), MDNS_TYPE_PTR, readTimeout * portTICK_PERIOD_MS, maxNumberOfInstances, &results), TAG, "query failed");
   if (results) {
     for (mdns_result_t* r = results; r; r = r->next) {
       MdnsServiceInstanceInfo info;
