@@ -72,9 +72,11 @@ private:
 
   struct Service {
     std::weak_ptr<NetworkServer> server;
+    bool isEnabled;
     std::string name;
     std::string type;
     std::string protocol;
+    uint16_t port;
     std::map<std::string, std::string> additionalInfo;
   };
   std::vector<Service> services;

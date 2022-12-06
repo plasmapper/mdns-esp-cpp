@@ -53,7 +53,7 @@ esp_err_t MdnsServer::Unlock() {
 //==============================================================================
 
 esp_err_t MdnsServer::Enable() {
-  LockGuard lg (mutex);
+  LockGuard lg (*this);
   if (enabled)
     return ESP_OK;
 
@@ -65,7 +65,7 @@ esp_err_t MdnsServer::Enable() {
 
   for (auto& service : services) {
     if (auto serverLocked = service.server.lock()) {
-      if (serverLocked->IsEnabled()) {
+      if (service.isEnabled) {
         std::unique_ptr<mdns_txt_item_t[]> txtItems;
         size_t numberOfTxtItems = service.additionalInfo.size();
         if (numberOfTxtItems) {
@@ -77,7 +77,7 @@ esp_err_t MdnsServer::Enable() {
           }            
         }          
 
-        ESP_RETURN_ON_ERROR (mdns_service_add (service.name.c_str(), service.type.c_str(), service.protocol.c_str(), serverLocked->GetPort(), txtItems.get(), numberOfTxtItems), \
+        ESP_RETURN_ON_ERROR (mdns_service_add (service.name.c_str(), service.type.c_str(), service.protocol.c_str(), service.port, txtItems.get(), numberOfTxtItems), \
                              TAG, "service add failed");
       }
     }
@@ -89,7 +89,7 @@ esp_err_t MdnsServer::Enable() {
 //==============================================================================
 
 esp_err_t MdnsServer::Disable() {
-  LockGuard lg (mutex);
+  LockGuard lg (*this);
   if (!enabled)
     return ESP_OK;
 
@@ -102,7 +102,15 @@ esp_err_t MdnsServer::Disable() {
 //==============================================================================
 
 void MdnsServer::HandleEvent (Server& server) {
-  LockGuard lg (mutex);
+  LockGuard lg (*this);
+  for (auto& service : services) {
+    if (auto serverLocked = service.server.lock()) {
+      if (serverLocked.get() == &server) {
+        service.isEnabled = serverLocked->IsEnabled();
+        service.port = serverLocked->GetPort();
+      }
+    }
+  }
   RestartIfEnabled();
 }
 
@@ -110,8 +118,8 @@ void MdnsServer::HandleEvent (Server& server) {
 
 esp_err_t MdnsServer::AddService (std::shared_ptr<NetworkServer> server, const std::string& name, const std::string& type, const std::string& protocol,
                                   const std::map<std::string, std::string>& additionalInfo) {
-  LockGuard lg (mutex);
-  services.push_back ({server, name, type, protocol, additionalInfo});
+  LockGuard lg (*this);
+  services.push_back ({server, server->IsEnabled(), name, type, protocol, server->GetPort(), additionalInfo});
   server->enabledEvent.AddHandler (serverEventHandler);
   server->disabledEvent.AddHandler (serverEventHandler);
   return RestartIfEnabled();
@@ -120,6 +128,7 @@ esp_err_t MdnsServer::AddService (std::shared_ptr<NetworkServer> server, const s
 //==============================================================================
 
 esp_err_t MdnsServer::RemoveService (std::shared_ptr<NetworkServer> server) {
+  LockGuard lg (*this);
   for (auto service = services.begin(); service != services.end();) {
     if (auto serverLocked = service->server.lock()) {
       if (serverLocked == server)
@@ -136,7 +145,7 @@ esp_err_t MdnsServer::RemoveService (std::shared_ptr<NetworkServer> server) {
 //==============================================================================
 
 bool MdnsServer::IsEnabled() {
-  LockGuard lg (mutex);
+  LockGuard lg (*this);
   return enabled;
 }
 
@@ -167,14 +176,14 @@ esp_err_t MdnsServer::SetMaxNumberOfClients (size_t maxNumberOfClients) {
 //==============================================================================
 
 std::string MdnsServer::GetHostname() {
-  LockGuard lg (mutex);
+  LockGuard lg (*this);
   return hostname;
 }
 
 //==============================================================================
 
 esp_err_t MdnsServer::SetHostname (const std::string& hostname) {
-  LockGuard lg (mutex);
+  LockGuard lg (*this);
   this->hostname = hostname;
   return RestartIfEnabled();
 }
