@@ -3,6 +3,8 @@ mDNS Component
 
 .. |COMPONENT| replace:: mdns
 
+.. |VERSION| replace:: 1.0.0
+
 .. include:: ../../../installation.rst
 
 .. include:: ../../../sdkconfig_network.rst
