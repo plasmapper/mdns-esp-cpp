@@ -3,7 +3,7 @@ mDNS Component
 
 .. |COMPONENT| replace:: mdns
 
-.. |VERSION| replace:: 1.0.0
+.. |VERSION| replace:: 1.0.1
 
 .. include:: ../../../installation.rst
 
@@ -17,8 +17,8 @@ Features
 
 Examples
 --------
-| `mDNS client <https://github.com/plasmapper/mdns-esp-cpp/tree/main/examples/mdns_client>`_
-| `mDNS server <https://github.com/plasmapper/mdns-esp-cpp/tree/main/examples/mdns_server>`_
+| `mDNS client <https://components.espressif.com/components/plasmapper/pl_mdns/versions/1.0.1/examples/mdns_client>`_
+| `mDNS server <https://components.espressif.com/components/plasmapper/pl_mdns/versions/1.0.1/examples/mdns_server>`_
   
 API reference
 -------------
