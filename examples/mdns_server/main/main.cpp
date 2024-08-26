@@ -9,7 +9,7 @@ public:
   static const uint16_t defaultPort = 7;
 
   EchoServer();
-  esp_err_t HandleRequest (PL::NetworkStream& clientStream) override;
+  esp_err_t HandleRequest(PL::NetworkStream& clientStream) override;
 };
 
 const std::string EchoServer::defaultName = "Echo Server";
@@ -22,7 +22,7 @@ const std::string wifiPassword = CONFIG_EXAMPLE_WIFI_PASSWORD;
 
 const std::string hostName = "ESP";
 auto echoServer = std::make_shared<EchoServer>();
-PL::MdnsServer mdnsServer (hostName);
+PL::MdnsServer mdnsServer(hostName);
 
 //==============================================================================
 
@@ -31,10 +31,10 @@ extern "C" void app_main(void) {
   esp_netif_init();
 
   wifi.Initialize();
-  wifi.SetSsid (wifiSsid);
-  wifi.SetPassword (wifiPassword);
+  wifi.SetSsid(wifiSsid);
+  wifi.SetPassword(wifiPassword);
 
-  mdnsServer.AddService (echoServer, EchoServer::defaultName, "_echo", "_tcp", { {"Test name", "Test value"} });
+  mdnsServer.AddService(echoServer, EchoServer::defaultName, "_echo", "_tcp", { {"Test name", "Test value"} });
 
   wifi.EnableIpV4DhcpClient();
   wifi.Enable();
@@ -42,22 +42,22 @@ extern "C" void app_main(void) {
   mdnsServer.Enable();
 
   while (1) {
-    vTaskDelay (1);
+    vTaskDelay(1);
   }
 }
 
 //==============================================================================
 
-EchoServer::EchoServer() : TcpServer (defaultPort) {
-  SetName (defaultName);
+EchoServer::EchoServer() : TcpServer(defaultPort) {
+  SetName(defaultName);
 }
 
 //==============================================================================
 
-esp_err_t EchoServer::HandleRequest (PL::NetworkStream& clientStream) {
+esp_err_t EchoServer::HandleRequest(PL::NetworkStream& clientStream) {
   uint8_t dataByte;
   while (clientStream.GetReadableSize()) {
-    if (clientStream.Read (&dataByte, 1) == ESP_OK)
+    if (clientStream.Read(&dataByte, 1) == ESP_OK)
       clientStream.Write(&dataByte, 1);
   }  
   return ESP_OK; 

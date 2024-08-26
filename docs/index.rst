@@ -17,6 +17,11 @@ Features
 1. :cpp:class:`PL::MdnsClient` - an mDNS client class. :cpp:func:`PL::MdnsClient::DnsSdQuery` discovers services using a DNS-SD query.
 2. :cpp:class:`PL::MdnsServer` - an mDNS server class. :cpp:func:`PL::MdnsServer::AddService` adds a :cpp:class:`PL::NetworkServer` to the mDNS server as a service. 
 
+Thread safety
+-------------
+
+Class method thread safety is implemented by having the :cpp:class:`PL::Lockable` as a base class and creating the class object lock guard at the beginning of the methods.
+
 Examples
 --------
 | `mDNS client <https://components.espressif.com/components/plasmapper/pl_mdns/versions/1.0.1/examples/mdns_client>`_
