@@ -3,9 +3,9 @@ mDNS Component
 
 .. |COMPONENT| replace:: mdns
 
-.. |ESP_IDF_VERSION| replace:: 5.0
+.. |ESP_IDF_VERSION| replace:: 5.3
   
-.. |VERSION| replace:: 1.0.1
+.. |VERSION| replace:: 1.1.0
 
 .. include:: ../../../installation.rst
 
@@ -24,8 +24,8 @@ Class method thread safety is implemented by having the :cpp:class:`PL::Lockable
 
 Examples
 --------
-| `mDNS client <https://components.espressif.com/components/plasmapper/pl_mdns/versions/1.0.1/examples/mdns_client>`_
-| `mDNS server <https://components.espressif.com/components/plasmapper/pl_mdns/versions/1.0.1/examples/mdns_server>`_
+| `mDNS client <https://components.espressif.com/components/plasmapper/pl_mdns/versions/1.1.0/examples/mdns_client>`_
+| `mDNS server <https://components.espressif.com/components/plasmapper/pl_mdns/versions/1.1.0/examples/mdns_server>`_
   
 API reference
 -------------
