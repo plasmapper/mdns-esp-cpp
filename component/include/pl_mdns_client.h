@@ -13,7 +13,7 @@ namespace PL {
 class MdnsClient : public Lockable{
 public:
   /// @brief Default read operation timeout in FreeRTOS ticks
-  static const TickType_t defaultReadTimeout = 300 / portTICK_PERIOD_MS;
+  static constexpr TickType_t defaultReadTimeout = 300 / portTICK_PERIOD_MS;
 
   /// @brief Creates an mDNS client
   MdnsClient() {}
