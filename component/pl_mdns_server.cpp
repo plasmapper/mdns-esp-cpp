@@ -1,4 +1,5 @@
 #include "pl_mdns_server.h"
+#include "pl_mdns_base.h"
 #include "mdns.h"
 #include "esp_check.h"
 
@@ -54,8 +55,12 @@ esp_err_t MdnsServer::Enable() {
   if (enabled)
     return ESP_OK;
 
-  ESP_RETURN_ON_ERROR(mdns_init(), TAG, "init failed");
-  ESP_RETURN_ON_ERROR(mdns_hostname_set(hostname.c_str()), TAG, "hostname set failed");
+  ESP_RETURN_ON_ERROR(Mdns::Init(), TAG, "init failed");
+
+  esp_err_t error = mdns_hostname_set(hostname.c_str());
+  if (error != ESP_OK)
+    Mdns::Free();
+  ESP_RETURN_ON_ERROR(error, TAG, "hostname set failed");
 
   enabled = true;
   enabledEvent.Generate();
@@ -90,7 +95,7 @@ esp_err_t MdnsServer::Disable() {
   if (!enabled)
     return ESP_OK;
 
-  mdns_free();
+  Mdns::Free();
   enabled = false;
   disabledEvent.Generate();
   return ESP_OK;

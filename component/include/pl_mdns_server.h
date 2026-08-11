@@ -81,7 +81,7 @@ private:
   };
   std::vector<Service> services;
 
-  esp_err_t RestartIfEnabled();  
+  esp_err_t RestartIfEnabled();
 };
 
 //==============================================================================

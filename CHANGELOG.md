@@ -18,6 +18,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Instance name filter bypass on empty discovered name in MdnsClient::DnsSdQuery.
 - Removing event handler in MdnsServer::RemoveService.
 - Invalid iterator use in MdnsServer::RemoveService.
+- Uncorrelated mdns_init and mdns_free calls in MdnsServer and MdnsClient.
 
 ## [1.1.0] - 2024-08-26
 ### Changed
