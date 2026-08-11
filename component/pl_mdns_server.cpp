@@ -131,7 +131,7 @@ esp_err_t MdnsServer::RemoveService(std::shared_ptr<NetworkServer> server) {
       if (serverLocked == server) {
         serverLocked->enabledEvent.RemoveHandler(serverEventHandler);
         serverLocked->disabledEvent.RemoveHandler(serverEventHandler);
-        services.erase(service);
+        service = services.erase(service);
       }
       else
         service++;
