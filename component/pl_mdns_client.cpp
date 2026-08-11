@@ -39,7 +39,8 @@ esp_err_t MdnsClient::DnsSdQuery(const std::string& type, const std::string& pro
   if (results) {
     for (mdns_result_t* r = results; r; r = r->next) {
       MdnsServiceInstanceInfo info;
-      info.instanceName = r->instance_name;
+      if (r->instance_name)
+        info.instanceName = r->instance_name;
 
       if (info.instanceName.empty() || info.instanceName.find(instanceName) != std::string::npos) {
         if (r->hostname)
