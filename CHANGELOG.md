@@ -19,6 +19,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Removing event handler in MdnsServer::RemoveService.
 - Invalid iterator use in MdnsServer::RemoveService.
 - Uncorrelated mdns_init and mdns_free calls in MdnsServer and MdnsClient.
+- Enabled state reported before service registration completed in MdnsServer::Enable.
 
 ## [1.1.0] - 2024-08-26
 ### Changed

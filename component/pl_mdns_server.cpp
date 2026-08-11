@@ -62,9 +62,6 @@ esp_err_t MdnsServer::Enable() {
     Mdns::Free();
   ESP_RETURN_ON_ERROR(error, TAG, "hostname set failed");
 
-  enabled = true;
-  enabledEvent.Generate();
-
   for (auto& service : services) {
     if (auto serverLocked = service.server.lock()) {
       if (service.isEnabled) {
@@ -76,15 +73,19 @@ esp_err_t MdnsServer::Enable() {
           for (auto& additionalInfoItem : service.additionalInfo) {
             txtItems[index].key = additionalInfoItem.first.c_str();
             txtItems[index++].value = additionalInfoItem.second.c_str();
-          }            
-        }          
+          }
+        }
 
-        ESP_RETURN_ON_ERROR(mdns_service_add(service.name.c_str(), service.type.c_str(), service.protocol.c_str(), service.port, txtItems.get(), numberOfTxtItems), \
-                             TAG, "service add failed");
+        error = mdns_service_add(service.name.c_str(), service.type.c_str(), service.protocol.c_str(), service.port, txtItems.get(), numberOfTxtItems);
+        if (error != ESP_OK)
+          Mdns::Free();
+        ESP_RETURN_ON_ERROR(error, TAG, "service add failed");
       }
     }
   }
 
+  enabled = true;
+  enabledEvent.Generate();
   return ESP_OK;
 }
 
