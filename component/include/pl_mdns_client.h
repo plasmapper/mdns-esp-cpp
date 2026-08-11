@@ -43,7 +43,7 @@ public:
 
 private:
   Mutex mutex;
-  TickType_t readTimeout = NetworkStream::defaultReadTimeout;
+  TickType_t readTimeout = defaultReadTimeout;
 };
 
 

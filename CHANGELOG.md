@@ -20,6 +20,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Invalid iterator use in MdnsServer::RemoveService.
 - Uncorrelated mdns_init and mdns_free calls in MdnsServer and MdnsClient.
 - Enabled state reported before service registration completed in MdnsServer::Enable.
+- Default read timeout referencing NetworkStream instead of MdnsClient in MdnsClient::readTimeout.
 
 ## [1.1.0] - 2024-08-26
 ### Changed
