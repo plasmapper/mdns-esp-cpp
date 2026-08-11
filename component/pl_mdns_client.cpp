@@ -42,7 +42,8 @@ esp_err_t MdnsClient::DnsSdQuery(const std::string& type, const std::string& pro
       info.instanceName = r->instance_name;
 
       if (info.instanceName.empty() || info.instanceName.find(instanceName) != std::string::npos) {
-        info.hostname = r->hostname;
+        if (r->hostname)
+          info.hostname = r->hostname;
 
         if (r->addr) {
           if (r->addr->addr.type == IPADDR_TYPE_V4)

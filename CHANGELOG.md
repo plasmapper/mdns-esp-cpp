@@ -12,6 +12,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Lock timeout handling.
 - Static const members to constexpr.
 
+### Fixed
+- Null hostname check in MdnsClient::DnsSdQuery.
+
 ## [1.1.0] - 2024-08-26
 ### Changed
 - ESP-IDF dependency to 5.3 and mDNS dependency to 1.4.0.
