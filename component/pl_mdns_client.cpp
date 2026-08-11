@@ -42,7 +42,7 @@ esp_err_t MdnsClient::DnsSdQuery(const std::string& type, const std::string& pro
       if (r->instance_name)
         info.instanceName = r->instance_name;
 
-      if (info.instanceName.empty() || info.instanceName.find(instanceName) != std::string::npos) {
+      if (info.instanceName.find(instanceName) != std::string::npos) {
         if (r->hostname)
           info.hostname = r->hostname;
 
