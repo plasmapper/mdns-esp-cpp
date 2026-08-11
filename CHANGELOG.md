@@ -16,6 +16,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Null hostname check in MdnsClient::DnsSdQuery.
 - Null instance name check in MdnsClient::DnsSdQuery.
 - Instance name filter bypass on empty discovered name in MdnsClient::DnsSdQuery.
+- Removing event handler in MdnsServer::RemoveService.
 
 ## [1.1.0] - 2024-08-26
 ### Changed

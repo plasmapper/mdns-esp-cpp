@@ -128,8 +128,11 @@ esp_err_t MdnsServer::RemoveService(std::shared_ptr<NetworkServer> server) {
   LockGuard lg(*this);
   for (auto service = services.begin(); service != services.end();) {
     if (auto serverLocked = service->server.lock()) {
-      if (serverLocked == server)
+      if (serverLocked == server) {
+        serverLocked->enabledEvent.RemoveHandler(serverEventHandler);
+        serverLocked->disabledEvent.RemoveHandler(serverEventHandler);
         services.erase(service);
+      }
       else
         service++;
     }
