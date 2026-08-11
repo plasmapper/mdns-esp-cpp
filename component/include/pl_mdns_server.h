@@ -40,11 +40,13 @@ public:
   /// @param type service type (_http, _ftp, etc)
   /// @param protocol service protocol (_tcp, _udp)
   /// @param additionalInfo additional information
-  /// @return 
+  /// @return error code
   esp_err_t AddService(std::shared_ptr<NetworkServer> server, const std::string& name, const std::string& type, const std::string& protocol,
                        const std::map<std::string, std::string>& additionalInfo = {});
 
-  // Removes the network server service from the mDNS server
+  /// @brief Removes the network server service from the mDNS server
+  /// @param server server
+  /// @return error code
   esp_err_t RemoveService(std::shared_ptr<NetworkServer> server);
 
   bool IsEnabled() override;
