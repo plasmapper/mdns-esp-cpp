@@ -55,8 +55,10 @@ esp_err_t MdnsClient::DnsSdQuery(const std::string& type, const std::string& pro
         if (r->addr) {
           if (r->addr->addr.type == IPADDR_TYPE_V4)
             info.networkEndpoint = NetworkEndpoint(IpV4Address(r->addr->addr.u_addr.ip4.addr), r->port);
-          if (r->addr->addr.type == IPADDR_TYPE_V6)
-            info.networkEndpoint = NetworkEndpoint(IpV6Address(*(IpV6Address*)&r->addr->addr.u_addr.ip6.addr), r->port);
+          if (r->addr->addr.type == IPADDR_TYPE_V6) {
+            auto& ip6 = r->addr->addr.u_addr.ip6;
+            info.networkEndpoint = NetworkEndpoint(IpV6Address(ip6.addr[0], ip6.addr[1], ip6.addr[2], ip6.addr[3], ip6.zone), r->port);
+          }
         }
 
         for (size_t i = 0; i < r->txt_count; i++) {
