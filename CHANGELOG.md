@@ -7,6 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 ### Fixed
 - DnsSdQuery null TXT record key or value handling.
+- Read timeout conversion to milliseconds
 
 ## [1.2.0] - 2026-08-11
 ### Added
