@@ -59,8 +59,10 @@ esp_err_t MdnsClient::DnsSdQuery(const std::string& type, const std::string& pro
             info.networkEndpoint = NetworkEndpoint(IpV6Address(*(IpV6Address*)&r->addr->addr.u_addr.ip6.addr), r->port);
         }
 
-        for (size_t i = 0; i < r->txt_count; i++)
-          info.additionalInfo[r->txt[i].key] = r->txt[i].value;
+        for (size_t i = 0; i < r->txt_count; i++) {
+          if (r->txt[i].key && r->txt[i].value)
+            info.additionalInfo[r->txt[i].key] = r->txt[i].value;
+        }
 
         serviceInstancesInfo.push_back(info);        
       }
