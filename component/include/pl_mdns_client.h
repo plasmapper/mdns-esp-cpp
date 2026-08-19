@@ -25,8 +25,7 @@ public:
   /// @param type service type (_http, _ftp, etc)
   /// @param protocol service protocol (_tcp, _udp)
   /// @param maxNumberOfInstances maximum number of service instances to discover
-  /// @param instanceName if not empty - only the services that contain this string in the name are returned 
-  /// @param timeout query timeout in FreeRTOS ticks
+  /// @param instanceName if not empty - only the services that contain this string in the name are returned
   /// @param serviceInstancesInfo discovered services
   /// @return error code
   esp_err_t DnsSdQuery(const std::string& type, const std::string& protocol, size_t maxNumberOfInstances, const std::string& instanceName, 
