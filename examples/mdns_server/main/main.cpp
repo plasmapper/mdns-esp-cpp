@@ -9,6 +9,7 @@ public:
   static const uint16_t defaultPort = 7;
 
   EchoServer();
+  ~EchoServer();
   esp_err_t HandleRequest(PL::NetworkStream& clientStream) override;
 };
 
@@ -50,6 +51,12 @@ extern "C" void app_main(void) {
 
 EchoServer::EchoServer() : TcpServer(defaultPort) {
   SetName(defaultName);
+}
+
+//==============================================================================
+
+EchoServer::~EchoServer() {
+  StopTask();
 }
 
 //==============================================================================

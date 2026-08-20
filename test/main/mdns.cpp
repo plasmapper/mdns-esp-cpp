@@ -69,6 +69,12 @@ void TestMdns() {
 
 //==============================================================================
 
+TestTcpServer::~TestTcpServer() {
+  StopTask();
+}
+
+//==============================================================================
+
 esp_err_t TestTcpServer::HandleRequest(PL::NetworkStream& clientStream) {
   return ESP_OK;
 }
