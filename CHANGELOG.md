@@ -7,6 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 ### Fixed
 - mdns_server example and test server not stopping the server task before destruction.
+- MdnsServer destruction sequence.
 
 ## [1.2.2] - 2026-08-19
 ### Fixed

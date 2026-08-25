@@ -24,6 +24,8 @@ MdnsServer::MdnsServer(const std::string& hostname) : hostname(hostname), server
 //==============================================================================
 
 MdnsServer::~MdnsServer() {
+  LockGuard lg(*this);
+  Disable();
   for (auto& service : services) {
     if (auto serverLocked = service.server.lock()) {
       serverLocked->enabledEvent.RemoveHandler(serverEventHandler);

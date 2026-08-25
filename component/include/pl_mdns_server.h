@@ -70,7 +70,6 @@ private:
   Mutex mutex;
   bool enabled = false;
   std::string hostname;
-  std::shared_ptr<EventHandler<Server>> serverEventHandler;
 
   struct Service {
     std::weak_ptr<NetworkServer> server;
@@ -82,6 +81,10 @@ private:
     std::map<std::string, std::string> additionalInfo;
   };
   std::vector<Service> services;
+
+  // Destroyed before services so that no stale weak_ptr can still be locked
+  // and used to call HandleEvent while services is being torn down.
+  std::shared_ptr<EventHandler<Server>> serverEventHandler;
 
   esp_err_t RestartIfEnabled();
 };
