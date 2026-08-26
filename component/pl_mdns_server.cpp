@@ -79,8 +79,10 @@ esp_err_t MdnsServer::Enable() {
         }
 
         error = mdns_service_add(service.name.c_str(), service.type.c_str(), service.protocol.c_str(), service.port, txtItems.get(), numberOfTxtItems);
-        if (error != ESP_OK)
+        if (error != ESP_OK) {
+          mdns_service_remove_all();
           Mdns::Free();
+        }
         ESP_RETURN_ON_ERROR(error, TAG, "service add failed");
       }
     }
@@ -98,6 +100,7 @@ esp_err_t MdnsServer::Disable() {
   if (!enabled)
     return ESP_OK;
 
+  mdns_service_remove_all();
   Mdns::Free();
   enabled = false;
   disabledEvent.Generate();
