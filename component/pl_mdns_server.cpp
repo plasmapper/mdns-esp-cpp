@@ -123,8 +123,10 @@ void MdnsServer::HandleEvent(Server& server) {
 
 esp_err_t MdnsServer::AddService(std::shared_ptr<NetworkServer> server, const std::string& name, const std::string& type, const std::string& protocol,
                                  const std::map<std::string, std::string>& additionalInfo) {
+  bool serverIsEnabled = server->IsEnabled();
+  uint16_t serverPort = server->GetPort();
   LockGuard lg(*this);
-  services.push_back({server, server->IsEnabled(), name, type, protocol, server->GetPort(), additionalInfo});
+  services.push_back({server, serverIsEnabled, name, type, protocol, serverPort, additionalInfo});
   server->enabledEvent.AddHandler(serverEventHandler);
   server->disabledEvent.AddHandler(serverEventHandler);
   return RestartIfEnabled();
