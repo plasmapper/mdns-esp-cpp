@@ -13,7 +13,7 @@ namespace PL {
 class MdnsServer : public NetworkServer, public EventHandler<Server> {
 public:
   /// @brief Default server name
-  static const std::string defaultName;
+  static constexpr const char* defaultName = "mDNS Server";
   /// @brief Default port
   static constexpr uint16_t defaultPort = 5353;
   /// @brief Default maximum number of server clients

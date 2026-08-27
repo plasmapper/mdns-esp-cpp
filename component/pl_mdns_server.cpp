@@ -13,10 +13,6 @@ namespace PL {
 
 //==============================================================================
 
-const std::string MdnsServer::defaultName = "mDNS Server";
-
-//==============================================================================
-
 MdnsServer::MdnsServer(const std::string& hostname) : hostname(hostname), serverEventHandler(this, [](EventHandler<Server>*){}) {
   SetName(defaultName);
 }
