@@ -139,12 +139,14 @@ esp_err_t MdnsServer::AddService(std::shared_ptr<NetworkServer> server, const st
 
 esp_err_t MdnsServer::RemoveService(std::shared_ptr<NetworkServer> server) {
   LockGuard lg(*this);
+  bool removed = false;
   for (auto service = services.begin(); service != services.end();) {
     if (auto serverLocked = service->server.lock()) {
       if (serverLocked == server) {
         serverLocked->enabledEvent.RemoveHandler(serverEventHandler);
         serverLocked->disabledEvent.RemoveHandler(serverEventHandler);
         service = services.erase(service);
+        removed = true;
       }
       else
         service++;
@@ -152,7 +154,7 @@ esp_err_t MdnsServer::RemoveService(std::shared_ptr<NetworkServer> server) {
     else
       service++;
   }
-  return RestartIfEnabled();
+  return removed ? RestartIfEnabled() : ESP_OK;
 }
 
 //==============================================================================
