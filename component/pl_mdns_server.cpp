@@ -197,6 +197,8 @@ std::string MdnsServer::GetHostname() {
 
 esp_err_t MdnsServer::SetHostname(const std::string& hostname) {
   LockGuard lg(*this);
+  if (this->hostname == hostname)
+    return ESP_OK;
   this->hostname = hostname;
   return RestartIfEnabled();
 }
