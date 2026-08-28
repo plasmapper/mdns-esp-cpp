@@ -10,7 +10,7 @@ namespace PL {
 //==============================================================================
 
 /// @brief mDNS server class
-class MdnsServer : public NetworkServer, public EventHandler<Server> {
+class MdnsServer : public NetworkServer {
 public:
   /// @brief Default server name
   static constexpr const char* defaultName = "mDNS Server";
@@ -31,8 +31,6 @@ public:
 
   esp_err_t Enable() override;
   esp_err_t Disable() override;
-
-  void HandleEvent(Server& server) override;
 
   /// @brief Adds a network server to the mDNS server as a service
   /// @param server server
@@ -67,6 +65,22 @@ public:
   esp_err_t SetHostname(const std::string& hostname);
 
 private:
+  // A separate object rather than an alias to the MdnsServer itself, so that a handler call
+  // already in flight keeps this object, not the MdnsServer, alive. The mutex is held for the
+  // whole HandleEvent call, so Detach waits for an in-flight call to finish and any call after
+  // it sees a null pointer and does nothing.
+  class ServerEventHandler : public EventHandler<Server> {
+  public:
+    ServerEventHandler(MdnsServer& mdnsServer) : mdnsServer(&mdnsServer) {}
+
+    void Detach();
+    void HandleEvent(Server& server) override;
+
+  private:
+    Mutex mutex;
+    MdnsServer* mdnsServer;
+  };
+
   Mutex mutex;
   bool enabled = false;
   std::string hostname;
@@ -82,10 +96,9 @@ private:
   };
   std::vector<Service> services;
 
-  // Destroyed before services so that no stale weak_ptr can still be locked
-  // and used to call HandleEvent while services is being torn down.
-  std::shared_ptr<EventHandler<Server>> serverEventHandler;
+  std::shared_ptr<ServerEventHandler> serverEventHandler;
 
+  void HandleEvent(Server& server);
   esp_err_t RestartIfEnabled();
 };
 

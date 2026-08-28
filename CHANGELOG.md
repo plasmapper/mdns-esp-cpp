@@ -7,6 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 ### Fixed
 - MdnsServer::defaultName static initialization order dependency.
+- MdnsServer being used as its own event handler, which could be called during or after its destruction.
 
 ## [1.2.4] - 2026-08-27
 ### Fixed

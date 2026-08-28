@@ -13,13 +13,17 @@ namespace PL {
 
 //==============================================================================
 
-MdnsServer::MdnsServer(const std::string& hostname) : hostname(hostname), serverEventHandler(this, [](EventHandler<Server>*){}) {
+MdnsServer::MdnsServer(const std::string& hostname) : hostname(hostname), serverEventHandler(std::make_shared<ServerEventHandler>(*this)) {
   SetName(defaultName);
 }
 
 //==============================================================================
 
 MdnsServer::~MdnsServer() {
+  // Detached before the lock is taken: Detach waits for an in-flight HandleEvent call to finish
+  // and that call takes this object's lock.
+  serverEventHandler->Detach();
+
   LockGuard lg(*this);
   Disable();
   for (auto& service : services) {
@@ -199,6 +203,21 @@ esp_err_t MdnsServer::SetHostname(const std::string& hostname) {
     return ESP_OK;
   this->hostname = hostname;
   return RestartIfEnabled();
+}
+
+//==============================================================================
+
+void MdnsServer::ServerEventHandler::Detach() {
+  LockGuard lg(mutex);
+  mdnsServer = nullptr;
+}
+
+//==============================================================================
+
+void MdnsServer::ServerEventHandler::HandleEvent(Server& server) {
+  LockGuard lg(mutex);
+  if (mdnsServer)
+    mdnsServer->HandleEvent(server);
 }
 
 //==============================================================================
