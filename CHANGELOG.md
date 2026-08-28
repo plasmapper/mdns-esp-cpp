@@ -4,11 +4,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Unreleased]
+## [1.2.5] - 2026-08-28
 ### Fixed
 - MdnsServer::defaultName static initialization order dependency.
 - MdnsServer being used as its own event handler, which could be called during or after its destruction.
 - MdnsServer::HandleEvent calling into the event source server while holding the mDNS server lock, inverting the lock order used everywhere else.
+- Mdns::mutex and Mdns::count static initialization order dependency.
 
 ## [1.2.4] - 2026-08-27
 ### Fixed

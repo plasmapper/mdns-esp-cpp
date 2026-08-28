@@ -12,26 +12,30 @@ namespace PL {
 
 //==============================================================================
 
-Mutex Mdns::mutex;
-int Mdns::count = 0;
+Mdns::State& Mdns::GetState() {
+  static State state;
+  return state;
+}
 
 //==============================================================================
 
 esp_err_t Mdns::Init() {
-  LockGuard lg(mutex);
-  if (count == 0)
+  State& state = GetState();
+  LockGuard lg(state.mutex);
+  if (state.count == 0)
     ESP_RETURN_ON_ERROR(mdns_init(), TAG, "init failed");
-  count++;
+  state.count++;
   return ESP_OK;
 }
 
 //==============================================================================
 
 void Mdns::Free() {
-  LockGuard lg(mutex);
-  if (count == 0)
+  State& state = GetState();
+  LockGuard lg(state.mutex);
+  if (state.count == 0)
     return;
-  if (--count == 0)
+  if (--state.count == 0)
     mdns_free();
 }
 
