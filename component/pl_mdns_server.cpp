@@ -110,12 +110,30 @@ esp_err_t MdnsServer::Disable() {
 //==============================================================================
 
 void MdnsServer::HandleEvent(Server& server) {
+  std::shared_ptr<NetworkServer> matchedServer;
+  {
+    LockGuard lg(*this);
+    for (auto& service : services) {
+      if (auto serverLocked = service.server.lock()) {
+        if (serverLocked.get() == &server)
+          matchedServer = serverLocked;
+      }
+    }
+  }
+  if (!matchedServer)
+    return;
+
+  // Read outside this object's lock, like AddService does, so the lock order is always
+  // server -> mDNS rather than mDNS -> server.
+  bool serverIsEnabled = matchedServer->IsEnabled();
+  uint16_t serverPort = matchedServer->GetPort();
+
   LockGuard lg(*this);
   for (auto& service : services) {
     if (auto serverLocked = service.server.lock()) {
       if (serverLocked.get() == &server) {
-        service.isEnabled = serverLocked->IsEnabled();
-        service.port = serverLocked->GetPort();
+        service.isEnabled = serverIsEnabled;
+        service.port = serverPort;
       }
     }
   }
